@@ -7,150 +7,135 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Sarabun', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-    </style>
+    <style> body { font-family: 'Sarabun', sans-serif; } .no-scrollbar::-webkit-scrollbar { display: none; } </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-800">
 
-    <!-- 1. หน้าจอรักษาความปลอดภัย -->
-    <div id="auth-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md text-center border border-slate-100">
-            <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fa-solid fa-shield-halved text-indigo-600 text-3xl"></i>
+    <!-- 📄 1. หน้าจอแจ้งเตือน PDPA (แสดงเป็นอันดับแรก) -->
+    <div id="pdpa-screen" class="fixed inset-0 bg-slate-900 z-[60] flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-slate-100">
+            <div class="text-indigo-600 text-5xl mb-6 text-center"><i class="fa-solid fa-file-shield"></i></div>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">นโยบายการคุ้มครองข้อมูล</h2>
+            <div class="text-sm text-slate-600 space-y-4 mb-8 leading-relaxed max-h-60 overflow-y-auto pr-2">
+                <p><strong>ข้อตกลงการเข้าถึงข้อมูลบุคลากร:</strong></p>
+                <p>1. ข้อมูลทำเนียบนี้จัดทำขึ้นเพื่อวัตถุประสงค์ในการติดต่อประสานงานภายในสังกัด สกร. จังหวัดลำพูน เท่านั้น</p>
+                <p>2. ผู้เข้าใช้งานตกลงจะไม่นำข้อมูล ชื่อ-นามสกุล และเบอร์โทรศัพท์ไปเผยแพร่ต่อสาธารณะ หรือนำไปใช้ในเชิงพาณิชย์โดยไม่ได้รับอนุญาต</p>
+                <p>3. ระบบจะมีการซ่อนเบอร์โทรศัพท์บางส่วนไว้ตามมาตรฐาน PDPA คุณสามารถเลือกเปิดดูได้เฉพาะเมื่อจำเป็นต้องติดต่อเท่านั้น</p>
+                <p>4. การกด "ยอมรับ" หมายถึงท่านรับทราบและยินยอมปฏิบัติตามนโยบายความเป็นส่วนตัวของหน่วยงาน</p>
             </div>
-            <h1 class="text-2xl font-bold text-slate-900 mb-2">ทำเนียบเบอร์โทรศัพท์บุคลากร สกร.ลำพูน</h1>
-            <p class="text-slate-500 text-sm mb-6">ระบบรักษาความปลอดภัยข้อมูลส่วนบุคคล (PDPA)</p>
-            <input type="password" id="passcode-input" placeholder="กรอกรหัสผ่านเข้าใช้งาน" 
-                class="w-full text-center py-4 px-6 text-2xl tracking-widest border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-500 mb-6">
-            <button onclick="checkPasscode()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 rounded-2xl transition-all shadow-lg">ยืนยันตัวตน</button>
-            <p id="auth-error" class="text-red-500 text-xs mt-4 hidden">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
+            <button onclick="acceptPDPA()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all">ยอมรับและดำเนินการต่อ</button>
         </div>
     </div>
 
-    <!-- 2. หน้าจอหลัก -->
+    <!-- 🔐 2. หน้าจอรักษาความปลอดภัย (แสดงหลังจากยอมรับ PDPA) -->
+    <div id="auth-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 hidden">
+        <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center">
+            <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fa-solid fa-lock text-indigo-600 text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-slate-900 mb-2">กรุณาใส่รหัสผ่าน</h1>
+            <p class="text-slate-400 text-xs mb-8 uppercase tracking-widest font-bold">สกร. จังหวัดลำพูน</p>
+            <input type="password" id="passcode-input" placeholder="••••" class="w-full text-center py-4 px-6 text-4xl tracking-[1rem] border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-500 mb-6">
+            <button onclick="checkPasscode()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all">เข้าสู่ระบบ</button>
+            <p id="auth-error" class="text-red-500 text-xs mt-4 hidden">รหัสผ่านไม่ถูกต้อง</p>
+        </div>
+    </div>
+
+    <!-- 📱 3. หน้าจอหลักของระบบ -->
     <div id="main-app" class="hidden pb-24">
-        <header class="bg-gradient-to-r from-indigo-700 to-blue-600 text-white shadow-lg sticky top-0 z-40">
+        <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <i class="fa-solid fa-address-book text-2xl"></i>
-                    <div>
-                        <h1 class="font-bold text-lg leading-tight">ทำเนียบเบอร์โทรศัพท์</h1>
-                        <span class="text-[10px] text-indigo-200 uppercase tracking-wider">สกร. จังหวัดลำพูน</span>
-                    </div>
+                    <h1 class="font-bold text-lg leading-tight">ทำเนียบเบอร์โทรศัพท์ สกร.ลำพูน</h1>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button onclick="toggleAdminMode()" id="admin-btn" class="bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-all">
-                        <i class="fa-solid fa-user-gear"></i>
-                    </button>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 p-2 rounded-lg transition-all">
-                        <i class="fa-solid fa-power-off"></i>
-                    </button>
+                    <button onclick="toggleAdminMode()" id="admin-btn" class="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-all"><i class="fa-solid fa-user-gear"></i></button>
+                    <button onclick="logout()" class="bg-red-500 p-2 rounded-lg hover:bg-red-600 transition-all"><i class="fa-solid fa-power-off"></i></button>
                 </div>
             </div>
         </header>
 
         <main class="max-w-7xl mx-auto px-4 mt-6">
-            <!-- ส่วนค้นหาและคัดกรองข้อมูล (Filters) -->
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100 mb-6 space-y-3">
-                <div class="relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="search-input" onkeyup="renderDirectory()" placeholder="ค้นหาชื่อหรือชื่อเล่น..." 
-                        class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:border-indigo-500 text-sm">
-                </div>
-                
+            <!-- ส่วนค้นหาและ Filter -->
+            <div class="bg-white p-5 rounded-3xl shadow-sm mb-4 border border-slate-100">
+                <input type="text" id="search-input" onkeyup="renderDirectory()" placeholder="ค้นหาชื่อหรือชื่อเล่น..." class="w-full p-3 bg-slate-50 border rounded-2xl focus:outline-none focus:border-indigo-500 text-sm mb-3">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <select id="filter-affiliation" onchange="renderDirectory()" class="p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:outline-none">
-                        <option value="">ทุกสังกัด</option>
-                    </select>
-                    <select id="filter-organization" onchange="renderDirectory()" class="p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:outline-none">
-                        <option value="">ทุกหน่วยงาน/สถานศึกษา</option>
-                    </select>
-                    <select id="filter-position" onchange="renderDirectory()" class="p-3 bg-slate-50 border border-slate-100 rounded-xl text-xs focus:outline-none">
-                        <option value="">ทุกตำแหน่ง</option>
-                    </select>
+                    <select id="filter-affiliation" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกสังกัด</option></select>
+                    <select id="filter-organization" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกหน่วยงาน</option></select>
+                    <select id="filter-position" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกตำแหน่ง</option></select>
                 </div>
             </div>
 
-            <!-- แผงควบคุมผู้ดูแลระบบ (ปรับปรุงใหม่: ตัดปุ่ม JSON ออก) -->
-            <div id="admin-panel" class="hidden bg-indigo-50 border border-indigo-100 rounded-3xl p-5 mb-6 space-y-4">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-bold text-indigo-900"><i class="fa-solid fa-circle-check mr-2"></i> โหมดจัดการข้อมูล</span>
-                    <button onclick="syncWithGoogleSheets()" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md hover:bg-indigo-700">
-                        <i class="fa-solid fa-arrows-rotate mr-1"></i> ซิงค์จาก Google Sheets
-                    </button>
+            <!-- แผงควบคุมแอดมิน -->
+            <div id="admin-panel" class="hidden bg-indigo-50 border border-indigo-100 rounded-3xl p-5 mb-6">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-indigo-900">แผงควบคุมแอดมิน</span>
+                    <button onclick="syncWithGoogleSheets()" class="text-xs bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold shadow-sm"><i class="fa-solid fa-arrows-rotate mr-1"></i> ดึงข้อมูลจากชีต</button>
                 </div>
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="openAddModal()" class="bg-white border border-indigo-200 text-indigo-600 py-3 rounded-2xl text-xs font-bold hover:bg-indigo-100 transition-all">
-                        <i class="fa-solid fa-plus mr-1"></i> เพิ่มบุคลากรใหม่
-                    </button>
-                    <button onclick="resetToDefault()" class="bg-white border border-red-100 text-red-500 py-3 rounded-2xl text-xs font-bold hover:bg-red-50 transition-all">
-                        <i class="fa-solid fa-trash-can mr-1"></i> ล้างข้อมูลเครื่องนี้
-                    </button>
-                </div>
-                <input type="hidden" id="sheets-api-url">
+                <button onclick="openAddModal()" class="w-full bg-white border-2 border-indigo-200 text-indigo-600 py-4 rounded-2xl font-bold text-sm shadow-sm hover:bg-indigo-50 transition-all">
+                    <i class="fa-solid fa-plus-circle mr-2"></i> เพิ่มบุคลากรใหม่เข้า Google Sheets
+                </button>
             </div>
 
             <div class="flex justify-between items-center mb-4 px-2">
                 <span class="text-xs text-slate-500 font-medium">พบทั้งหมด <span id="record-count" class="font-bold text-indigo-600">0</span> รายการ</span>
-                <button onclick="toggleAllMasks()" id="toggle-all-btn" class="text-xs text-indigo-600 font-bold flex items-center gap-1">
-                    <i class="fa-solid fa-eye-slash" id="toggle-all-icon"></i> <span id="toggle-all-text">ซ่อนเบอร์โทรศัพท์</span>
+                <button onclick="toggleAllMasks()" class="text-xs text-indigo-600 font-bold flex items-center gap-1">
+                    <i id="toggle-all-icon" class="fa-solid fa-eye-slash"></i> <span id="toggle-all-text">ซ่อนเบอร์โทรศัพท์</span>
                 </button>
             </div>
 
-            <!-- แสดงผล Card บนมือถือ -->
-            <div id="directory-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- ข้อมูลจะแสดงที่นี่ -->
-            </div>
-            
-            <div id="no-data-alert" class="hidden py-20 text-center text-slate-400">
-                <i class="fa-solid fa-user-slash text-5xl mb-4 opacity-20"></i>
-                <p>ไม่พบข้อมูลตามเงื่อนไขที่เลือก</p>
-            </div>
+            <!-- คอนเทนเนอร์แสดงรายชื่อ -->
+            <div id="directory-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <div id="no-data-alert" class="hidden py-20 text-center text-slate-400"><p>ไม่พบข้อมูลที่ค้นหา</p></div>
         </main>
     </div>
 
-    <!-- หน้าต่าง Modal สำหรับเพิ่ม/แก้ไข -->
+    <!-- 📝 4. Modal สำหรับเพิ่มข้อมูล -->
     <div id="contact-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 id="modal-title" class="font-bold text-slate-900">เพิ่มบุคลากร</h3>
-                <button onclick="closeContactModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+        <div class="bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden flex flex-col">
+            <div class="p-6 border-b bg-slate-50 flex justify-between items-center">
+                <h3 class="font-bold">เพิ่มบุคลากรใหม่</h3>
+                <button onclick="closeContactModal()"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-4 no-scrollbar">
-                <input type="hidden" id="form-index">
-                <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">รหัส (ID)</label><input type="text" id="form-id" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                    <div><label class="text-[10px] font-bold text-slate-400 uppercase">ชื่อเล่น</label><input type="text" id="form-nickname" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
+            <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh]">
+                <div class="bg-indigo-50 p-4 rounded-2xl">
+                    <label class="text-[10px] font-bold text-indigo-400 block uppercase">รหัสพนักงาน (AUTO)</label>
+                    <input type="text" id="form-id" readonly class="w-full bg-transparent font-bold text-indigo-700 outline-none text-lg">
                 </div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">ชื่อ-นามสกุล</label><input type="text" id="form-name" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">ตำแหน่ง</label><input type="text" id="form-position" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">สังกัด</label><input type="text" id="form-affiliation" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">หน่วยงาน/สถานศึกษา</label><input type="text" id="form-organization" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">เบอร์โทรศัพท์มือถือ</label><input type="tel" id="form-phone" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
-                <div><label class="text-[10px] font-bold text-slate-400 uppercase">เบอร์โทรสถานศึกษา</label><input type="tel" id="form-org-phone" class="w-full p-3 bg-slate-50 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อเล่น</label><input type="text" id="form-nickname" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์มือถือ</label><input type="tel" id="form-phone" class="w-full p-3 border-2 border-indigo-100 rounded-xl text-sm outline-none"></div>
+                </div>
+                
+                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อ-นามสกุล</label><input type="text" id="form-name" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
+                
+                <div class="space-y-4 bg-slate-50 p-4 rounded-2xl">
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ตำแหน่ง (เลือก)</label><select id="form-position" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">สังกัด (เลือก)</label><select id="form-affiliation" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">หน่วยงาน/สถานศึกษา (เลือก)</label><select id="form-organization" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
+                </div>
+                
+                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์สถานศึกษา</label><input type="tel" id="form-org-phone" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
             </div>
-            <div class="p-6 bg-slate-50 border-t border-slate-100 flex gap-2">
-                <button onclick="closeContactModal()" class="flex-1 py-3 border border-slate-200 rounded-2xl text-xs font-bold text-slate-600">ยกเลิก</button>
-                <button onclick="saveContact()" class="flex-1 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-bold shadow-lg">บันทึกข้อมูล</button>
+            <div class="p-6 bg-slate-50 flex gap-2">
+                <button onclick="closeContactModal()" class="flex-1 py-4 bg-slate-200 rounded-2xl text-sm font-bold">ยกเลิก</button>
+                <button onclick="saveToCloud()" id="save-btn" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl text-sm font-bold shadow-lg">บันทึกข้อมูล</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] px-6 py-3 rounded-full shadow-2xl z-50 opacity-0 transition-all pointer-events-none transform translate-y-4">
-        <span id="toast-message"></span>
-    </div>
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[11px] px-6 py-3 rounded-full shadow-2xl z-[70] opacity-0 transition-all duration-300 transform translate-y-4"></div>
 
     <script>
-        // 🔗 ตั้งค่าลิงก์ Google Sheets ถาวร
         const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxJ9L7PqubUpGuembTJD-tKg2Z0JEAZRcpcDYCtj2Qf0uHdfxepq1Uiq3FvWl9MHQan/exec";
         const SAFE_PASSCODE = "1234";
 
         let contacts = [];
         let isAdminMode = false;
-        let isAllMasked = true;
+        let isGlobalMasked = true;
+        let unmaskedIds = new Set(); // เก็บ ID ที่ผู้ใช้เลือกเปิดดูเบอร์เอง
 
         window.onload = function() {
             const saved = localStorage.getItem('secure_directory_contacts');
@@ -162,16 +147,25 @@
                 syncWithGoogleSheets(true);
             }
 
-            document.getElementById('sheets-api-url').value = PERMANENT_SHEETS_URL;
-
-            if (sessionStorage.getItem('is_authenticated') === 'true') {
-                showApp();
+            // เช็คว่าเคยยอมรับ PDPA และ Login หรือยัง
+            if (sessionStorage.getItem('pdpa_accepted') === 'true') {
+                document.getElementById('pdpa-screen').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                
+                if (sessionStorage.getItem('is_authenticated') === 'true') {
+                    showApp();
+                }
             }
         };
 
+        function acceptPDPA() {
+            sessionStorage.setItem('pdpa_accepted', 'true');
+            document.getElementById('pdpa-screen').classList.add('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+
         function checkPasscode() {
-            const val = document.getElementById('passcode-input').value;
-            if (val === SAFE_PASSCODE) {
+            if (document.getElementById('passcode-input').value === SAFE_PASSCODE) {
                 sessionStorage.setItem('is_authenticated', 'true');
                 showApp();
             } else {
@@ -181,171 +175,126 @@
         }
 
         function showApp() {
+            document.getElementById('pdpa-screen').classList.add('hidden');
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
         }
 
         function logout() {
-            sessionStorage.removeItem('is_authenticated');
+            sessionStorage.clear();
             location.reload();
         }
 
-        // ฟังก์ชันดึงข้อมูลจาก Google Sheets
-        async function syncWithGoogleSheets(isSilent = false) {
-            const url = PERMANENT_SHEETS_URL;
-            if (!isSilent) showToast("กำลังซิงค์ข้อมูลจาก Cloud...", "fa-spinner fa-spin");
+        async function syncWithGoogleSheets(silent = false) {
+            if (!silent) showToast("กำลังดึงข้อมูลเรียลไทม์...", "fa-sync fa-spin");
             try {
-                const response = await fetch(url);
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    contacts = data;
-                    localStorage.setItem('secure_directory_contacts', JSON.stringify(contacts));
-                    populateFilters();
-                    renderDirectory();
-                    if (!isSilent) showToast("อัปเดตข้อมูลเรียบร้อยแล้ว", "fa-circle-check");
-                }
-            } catch (e) {
-                if (!isSilent) showToast("เชื่อมต่อฐานข้อมูลไม่สำเร็จ", "fa-circle-exclamation");
-            }
+                const res = await fetch(PERMANENT_SHEETS_URL);
+                contacts = await res.json();
+                localStorage.setItem('secure_directory_contacts', JSON.stringify(contacts));
+                populateFilters();
+                renderDirectory();
+                if (!silent) showToast("อัปเดตข้อมูลสำเร็จ", "fa-check");
+            } catch (e) { if (!silent) showToast("การเชื่อมต่อล้มเหลว", "fa-xmark"); }
         }
 
-        // ฟังก์ชันสร้างตัวเลือกใน Dropdown (Filters) อัตโนมัติ
         function populateFilters() {
-            const affSet = new Set();
-            const orgSet = new Set();
-            const posSet = new Set();
-
+            const affs = new Set(), orgs = new Set(), poss = new Set();
             contacts.forEach(c => {
-                if (c["สังกัด"]) affSet.add(c["สังกัด"]);
-                if (c["หน่วยงาน/สถานศึกษา"]) orgSet.add(c["หน่วยงาน/สถานศึกษา"]);
-                if (c["ตำแหน่ง"]) posSet.add(c["ตำแหน่ง"]);
+                if (c["สังกัด"]) affs.add(c["สังกัด"]);
+                if (c["หน่วยงาน/สถานศึกษา"]) orgs.add(c["หน่วยงาน/สถานศึกษา"]);
+                if (c["ตำแหน่ง"]) poss.add(c["ตำแหน่ง"]);
             });
 
-            const updateSelect = (id, set, label) => {
+            const fillSelect = (id, set, first) => {
                 const el = document.getElementById(id);
-                const current = el.value;
-                el.innerHTML = `<option value="">ทุก${label}</option>`;
-                [...set].sort().forEach(val => {
-                    el.innerHTML += `<option value="${val}" ${val === current ? 'selected' : ''}>${val}</option>`;
-                });
+                el.innerHTML = `<option value="">${first}</option>`;
+                [...set].sort().forEach(v => el.innerHTML += `<option value="${v}">${v}</option>`);
             };
+            
+            fillSelect('filter-affiliation', affs, 'ทุกสังกัด');
+            fillSelect('filter-organization', orgs, 'ทุกหน่วยงาน');
+            fillSelect('filter-position', poss, 'ทุกตำแหน่ง');
 
-            updateSelect('filter-affiliation', affSet, 'สังกัด');
-            updateSelect('filter-organization', orgSet, 'หน่วยงาน/สถานศึกษา');
-            updateSelect('filter-position', posSet, 'ตำแหน่ง');
+            const fillModal = (id, set) => {
+                const el = document.getElementById(id);
+                el.innerHTML = '';
+                [...set].sort().forEach(v => el.innerHTML += `<option value="${v}">${v}</option>`);
+            };
+            fillModal('form-position', poss);
+            fillModal('form-affiliation', affs);
+            fillModal('form-organization', orgs);
         }
 
-        // ฟังก์ชันแสดงผลรายชื่อ (Render) พร้อมระบบค้นหาและคัดกรอง
+        function toggleIndividualMask(id) {
+            if (unmaskedIds.has(id)) unmaskedIds.delete(id);
+            else unmaskedIds.add(id);
+            renderDirectory();
+        }
+
+        function toggleAllMasks() {
+            isGlobalMasked = !isGlobalMasked;
+            unmaskedIds.clear(); // รีเซ็ตการเปิดรายบุคคลเมื่อมีการกดปุ่มส่วนกลาง
+            document.getElementById('toggle-all-text').innerText = isGlobalMasked ? "แสดงเบอร์โทรศัพท์" : "ซ่อนเบอร์โทรศัพท์";
+            document.getElementById('toggle-all-icon').className = isGlobalMasked ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
+            renderDirectory();
+        }
+
         function renderDirectory() {
             const search = document.getElementById('search-input').value.toLowerCase();
-            const aff = document.getElementById('filter-affiliation').value;
-            const org = document.getElementById('filter-organization').value;
-            const pos = document.getElementById('filter-position').value;
-
+            const fAff = document.getElementById('filter-affiliation').value;
+            const fOrg = document.getElementById('filter-organization').value;
+            const fPos = document.getElementById('filter-position').value;
             const container = document.getElementById('directory-cards-container');
             container.innerHTML = "";
             let count = 0;
 
-            contacts.forEach((item, index) => {
-                const matchSearch = item["ชื่อ-สกุล"].toLowerCase().includes(search) || 
-                                    (item["ชื่อเล่น"] && item["ชื่อเล่น"].toLowerCase().includes(search));
-                const matchAff = aff === "" || item["สังกัด"] === aff;
-                const matchOrg = org === "" || item["หน่วยงาน/สถานศึกษา"] === org;
-                const matchPos = pos === "" || item["ตำแหน่ง"] === pos;
+            contacts.forEach(item => {
+                const nameMatch = item["ชื่อ-สกุล"].toLowerCase().includes(search) || (item["ชื่อเล่น"] && item["ชื่อเล่น"].toLowerCase().includes(search));
+                const affMatch = fAff === "" || item["สังกัด"] === fAff;
+                const orgMatch = fOrg === "" || item["หน่วยงาน/สถานศึกษา"] === fOrg;
+                const posMatch = fPos === "" || item["ตำแหน่ง"] === fPos;
 
-                if (matchSearch && matchAff && matchOrg && matchPos) {
+                if (nameMatch && affMatch && orgMatch && posMatch) {
                     count++;
                     const phoneRaw = item["เบอร์โทรศัพท์"];
-                    const phoneDisplay = isAllMasked ? maskPhone(phoneRaw) : formatPhone(phoneRaw);
-                    const orgPhone = formatPhone(item["เบอร์โทรสถานศึกษา"]);
+                    const id = item.ID_Contact;
+                    const isMasked = isGlobalMasked && !unmaskedIds.has(id);
+                    const phoneDisplay = isMasked ? `${String(phoneRaw).slice(0,3)}-xxx-${String(phoneRaw).slice(7)}` : phoneRaw;
+                    const eyeIcon = isMasked ? 'fa-eye' : 'fa-eye-slash';
 
-                    const card = `
-                        <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 w-1.5 h-full bg-indigo-500"></div>
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <div class="text-[10px] font-bold text-indigo-500 uppercase tracking-tighter">${item["ตำแหน่ง"]}</div>
-                                    <h3 class="font-bold text-slate-900 text-base">${item["ชื่อ-สกุล"]} ${item["ชื่อเล่น"] ? `<span class="text-indigo-400 text-sm">(${item["ชื่อเล่น"]})</span>` : ''}</h3>
-                                    <p class="text-[10px] text-slate-400">${item["หน่วยงาน/สถานศึกษา"]} (${item["สังกัด"]})</p>
-                                </div>
-                                ${isAdminMode ? `<button onclick="openEditModal(${index})" class="text-slate-300 hover:text-indigo-600"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                    const card = `<div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 relative">
+                        <div class="text-[10px] font-bold text-indigo-500 uppercase">${item["ตำแหน่ง"]}</div>
+                        <h3 class="font-bold text-slate-900">${item["ชื่อ-สกุล"]} (${item["ชื่อเล่น"] || ''})</h3>
+                        <p class="text-[10px] text-slate-400 mb-4">${item["หน่วยงาน/สถานศึกษา"]}</p>
+                        <div class="flex gap-2">
+                            <div class="flex-1 bg-indigo-50 rounded-xl p-2 flex items-center justify-between border border-indigo-100">
+                                <span class="text-xs font-bold font-mono text-slate-700">${phoneDisplay}</span>
+                                <button onclick="toggleIndividualMask('${id}')" class="text-slate-400 hover:text-indigo-600 ml-1"><i class="fa-solid ${eyeIcon}"></i></button>
                             </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="bg-indigo-50 p-3 rounded-2xl flex flex-col justify-between">
-                                    <span class="text-[9px] font-bold text-indigo-400 block mb-1">มือถือส่วนตัว</span>
-                                    <span class="text-xs font-bold text-slate-700 block mb-2">${phoneDisplay}</span>
-                                    <a href="tel:${phoneRaw}" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-center text-[10px] font-bold"><i class="fa-solid fa-phone mr-1"></i> โทร</a>
-                                </div>
-                                <div class="bg-slate-50 p-3 rounded-2xl flex flex-col justify-between">
-                                    <span class="text-[9px] font-bold text-slate-400 block mb-1">สถานศึกษา</span>
-                                    <span class="text-xs font-bold text-slate-700 block mb-2">${orgPhone || 'ไม่มีข้อมูล'}</span>
-                                    ${orgPhone ? `<a href="tel:${orgPhone}" class="w-full bg-slate-600 text-white py-2 rounded-xl text-center text-[10px] font-bold"><i class="fa-solid fa-phone mr-1"></i> โทร</a>` : '<span class="py-2 text-[10px] text-slate-300 text-center">-</span>'}
-                                </div>
-                            </div>
-                        </div>`;
+                            <a href="tel:${phoneRaw}" class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md"><i class="fa-solid fa-phone"></i></a>
+                            ${item["เบอร์โทรสถานศึกษา"] ? `<a href="tel:${item["เบอร์โทรสถานศึกษา"]}" class="bg-slate-100 text-slate-500 w-10 h-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-school"></i></a>` : ''}
+                        </div>
+                        ${isAdminMode ? `<button onclick="showToast('แก้ไขข้อมูลผ่านชีตเท่านั้น')" class="absolute top-4 right-4 text-slate-300"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+                    </div>`;
                     container.innerHTML += card;
                 }
             });
-
             document.getElementById('record-count').innerText = count;
             document.getElementById('no-data-alert').classList.toggle('hidden', count > 0);
         }
 
-        // ฟังก์ชันจัดการเบอร์โทร (Format & Mask)
-        function maskPhone(p) {
-            const s = String(p).replace(/[^0-9]/g, '');
-            return s.length >= 9 ? `${s.slice(0,3)}-xxx-${s.slice(7)}` : p;
-        }
-
-        function formatPhone(p) {
-            if (!p) return "";
-            const s = String(p).replace(/[^0-9]/g, '');
-            return s.length === 10 ? `${s.slice(0,3)}-${s.slice(3,6)}-${s.slice(6)}` : p;
-        }
-
-        function toggleAllMasks() {
-            isAllMasked = !isAllMasked;
-            document.getElementById('toggle-all-icon').className = isAllMasked ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
-            document.getElementById('toggle-all-text').innerText = isAllMasked ? "แสดงเบอร์โทรศัพท์" : "ซ่อนเบอร์โทรศัพท์";
-            renderDirectory();
-        }
-
-        function toggleAdminMode() {
-            isAdminMode = !isAdminMode;
-            document.getElementById('admin-btn').classList.toggle('bg-amber-500');
-            document.getElementById('admin-btn').classList.toggle('text-white');
-            document.getElementById('admin-panel').classList.toggle('hidden');
-            renderDirectory();
-        }
-
-        // จัดการ Modal
+        function toggleAdminMode() { isAdminMode = !isAdminMode; document.getElementById('admin-panel').classList.toggle('hidden'); renderDirectory(); }
+        
         function openAddModal() {
-            document.getElementById('modal-title').innerText = "เพิ่มบุคลากรใหม่";
-            document.getElementById('form-index').value = "";
-            ['form-id','form-name','form-nickname','form-position','form-affiliation','form-organization','form-phone','form-org-phone'].forEach(id => document.getElementById(id).value = "");
+            document.getElementById('form-id').value = "ID-" + (contacts.length + 1).toString().padStart(3, '0');
             document.getElementById('contact-modal').classList.remove('hidden');
         }
-
-        function openEditModal(i) {
-            const c = contacts[i];
-            document.getElementById('modal-title').innerText = "แก้ไขข้อมูล";
-            document.getElementById('form-index').value = i;
-            document.getElementById('form-id').value = c.ID_Contact || "";
-            document.getElementById('form-name').value = c["ชื่อ-สกุล"] || "";
-            document.getElementById('form-nickname').value = c["ชื่อเล่น"] || "";
-            document.getElementById('form-position').value = c["ตำแหน่ง"] || "";
-            document.getElementById('form-affiliation').value = c["สังกัด"] || "";
-            document.getElementById('form-organization').value = c["หน่วยงาน/สถานศึกษา"] || "";
-            document.getElementById('form-phone').value = c["เบอร์โทรศัพท์"] || "";
-            document.getElementById('form-org-phone').value = c["เบอร์โทรสถานศึกษา"] || "";
-            document.getElementById('contact-modal').classList.remove('hidden');
-        }
-
         function closeContactModal() { document.getElementById('contact-modal').classList.add('hidden'); }
 
-        function saveContact() {
-            const i = document.getElementById('form-index').value;
-            const data = {
+        async function saveToCloud() {
+            const btn = document.getElementById('save-btn');
+            btn.disabled = true; btn.innerHTML = "กำลังส่งข้อมูล...";
+            const payload = {
                 ID_Contact: document.getElementById('form-id').value,
                 "ชื่อ-สกุล": document.getElementById('form-name').value,
                 "ชื่อเล่น": document.getElementById('form-nickname').value,
@@ -355,32 +304,22 @@
                 "เบอร์โทรศัพท์": document.getElementById('form-phone').value,
                 "เบอร์โทรสถานศึกษา": document.getElementById('form-org-phone').value
             };
-
-            if (i === "") contacts.push(data);
-            else contacts[i] = data;
-
-            localStorage.setItem('secure_directory_contacts', JSON.stringify(contacts));
-            closeContactModal();
-            populateFilters();
-            renderDirectory();
-            showToast("บันทึกข้อมูลแล้ว", "fa-check-circle");
-        }
-
-        function resetToDefault() {
-            if (confirm("คุณต้องการล้างข้อมูลรายชื่อทั้งหมดในเครื่องนี้ใช่หรือไม่?")) {
-                localStorage.removeItem('secure_directory_contacts');
-                location.reload();
-            }
+            try {
+                await fetch(PERMANENT_SHEETS_URL, { method: "POST", body: JSON.stringify(payload) });
+                showToast("บันทึกสำเร็จ!", "fa-check");
+                closeContactModal();
+                setTimeout(() => syncWithGoogleSheets(true), 2000);
+            } catch (e) { showToast("เกิดข้อผิดพลาด", "fa-xmark"); } finally { btn.disabled = false; btn.innerHTML = "ยืนยันบันทึกข้อมูล"; }
         }
 
         function showToast(msg, icon) {
             const t = document.getElementById('toast');
-            document.getElementById('toast-message').innerHTML = `<i class="fa-solid ${icon} mr-2"></i> ${msg}`;
-            t.classList.remove('opacity-0', 'translate-y-4');
-            t.classList.add('opacity-100', 'translate-y-0');
+            t.innerHTML = `<i class="fa-solid ${icon} mr-2"></i> ${msg}`;
+            t.classList.replace('opacity-0', 'opacity-100');
+            t.classList.replace('translate-y-4', 'translate-y-0');
             setTimeout(() => {
-                t.classList.remove('opacity-100', 'translate-y-0');
-                t.classList.add('opacity-0', 'translate-y-4');
+                t.classList.replace('opacity-100', 'opacity-0');
+                t.classList.replace('translate-y-0', 'translate-y-4');
             }, 3000);
         }
     </script>
