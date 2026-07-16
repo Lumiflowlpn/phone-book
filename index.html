@@ -26,11 +26,11 @@
                 <p>3. ระบบมีการซ่อนเบอร์โทรศัพท์ไว้เพื่อความปลอดภัย (PDPA) ท่านสามารถกดเปิดดูได้เฉพาะเมื่อจำเป็น</p>
                 <p>4. การกด "ยอมรับ" หมายถึงท่านตกลงจะปฏิบัติตามกฎระเบียบรักษาความลับข้อมูลบุคลากร</p>
             </div>
-            <button onclick="acceptPDPA()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all">ยอมรับและเข้าสู่ระบบ</button>
+            <button onclick="acceptPDPA()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all text-lg">ยอมรับและดำเนินการต่อ</button>
         </div>
     </div>
 
-    <!-- 🔐 2. หน้าจอล็อกอิน (แสดงหลังจากยอมรับ PDPA) -->
+    <!-- 🔐 2. หน้าจอล็อกอิน -->
     <div id="auth-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 hidden">
         <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md text-center">
             <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -39,7 +39,7 @@
             <h1 class="text-2xl font-bold text-slate-900 mb-2">กรุณาใส่รหัสผ่าน</h1>
             <p class="text-slate-400 text-xs mb-8 font-bold tracking-widest uppercase">สกร. จังหวัดลำพูน</p>
             <input type="password" id="passcode-input" placeholder="••••" class="w-full text-center py-4 px-6 text-4xl tracking-[1rem] border-2 border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-500 mb-6">
-            <button onclick="checkPasscode()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all">ยืนยันรหัสผ่าน</button>
+            <button onclick="checkPasscode()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all text-lg">ยืนยันรหัสผ่าน</button>
             <p id="auth-error" class="text-red-500 text-xs mt-4 hidden">รหัสผ่านไม่ถูกต้อง</p>
         </div>
     </div>
@@ -62,11 +62,11 @@
         <main class="max-w-7xl mx-auto px-4 mt-6">
             <!-- ส่วนค้นหาและ Filter -->
             <div class="bg-white p-5 rounded-3xl shadow-sm mb-4 border border-slate-100">
-                <input type="text" id="search-input" onkeyup="renderDirectory()" placeholder="ค้นหาชื่อหรือชื่อเล่น..." class="w-full p-3 bg-slate-50 border rounded-2xl focus:outline-none focus:border-indigo-500 text-sm mb-3">
+                <input type="text" id="search-input" onkeyup="renderDirectory()" placeholder="ค้นหาชื่อหรือชื่อเล่น..." class="w-full p-3 bg-slate-50 border rounded-2xl focus:outline-none focus:border-indigo-500 text-sm mb-3 shadow-inner">
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                    <select id="filter-affiliation" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกสังกัด</option></select>
-                    <select id="filter-organization" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกหน่วยงาน</option></select>
-                    <select id="filter-position" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs"><option value="">ทุกตำแหน่ง</option></select>
+                    <select id="filter-affiliation" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs outline-none"><option value="">ทุกสังกัด</option></select>
+                    <select id="filter-organization" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs outline-none"><option value="">ทุกหน่วยงาน</option></select>
+                    <select id="filter-position" onchange="renderDirectory()" class="p-3 bg-slate-50 border rounded-xl text-xs outline-none"><option value="">ทุกตำแหน่ง</option></select>
                 </div>
             </div>
 
@@ -75,7 +75,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <span class="text-sm font-bold text-indigo-900 block">โหมดแอดมิน</span>
-                        <p class="text-[10px] text-indigo-400 italic">* กดไอคอนปากกาบนการ์ดเพื่อแก้ไขข้อมูลบุคลากร</p>
+                        <p class="text-[10px] text-indigo-400 italic">* กดไอคอนปากกาบนการ์ดเพื่อแก้ไขข้อมูล</p>
                     </div>
                     <button onclick="syncWithGoogleSheets()" class="text-xs bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> ดึงข้อมูลจากชีต
@@ -83,6 +83,7 @@
                 </div>
             </div>
 
+            <!-- สรุปผลลัพธ์ -->
             <div class="flex justify-between items-center mb-4 px-2">
                 <span class="text-xs text-slate-500 font-medium">พบทั้งหมด <span id="record-count" class="font-bold text-indigo-600">0</span> รายการ</span>
                 <button onclick="toggleAllMasks()" class="text-xs text-indigo-600 font-bold flex items-center gap-1">
@@ -90,8 +91,10 @@
                 </button>
             </div>
 
+            <!-- คอนเทนเนอร์แสดงรายชื่อ (Cards) -->
             <div id="directory-cards-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-            <div id="no-data-alert" class="hidden py-20 text-center text-slate-400"><p>ไม่พบข้อมูล</p></div>
+            
+            <div id="no-data-alert" class="hidden py-20 text-center text-slate-400"><p>ไม่พบข้อมูลที่ค้นหา</p></div>
         </main>
     </div>
 
@@ -103,21 +106,21 @@
                 <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             <div class="p-6 space-y-4 overflow-y-auto max-h-[70vh] no-scrollbar">
-                <div class="bg-indigo-50 p-4 rounded-2xl">
-                    <label class="text-[10px] font-bold text-indigo-400 block uppercase">ID_Contact (อ่านอย่างเดียว)</label>
+                <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                    <label class="text-[10px] font-bold text-indigo-400 block uppercase tracking-wider">รหัส ID (อ่านอย่างเดียว)</label>
                     <input type="text" id="form-id" readonly class="w-full bg-transparent font-bold text-indigo-700 outline-none text-lg">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อเล่น</label><input type="text" id="form-nickname" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
-                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์มือถือ</label><input type="tel" id="form-phone" class="w-full p-3 border-2 border-indigo-100 rounded-xl text-sm outline-none"></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อเล่น</label><input type="text" id="form-nickname" class="w-full p-3 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์มือถือ</label><input type="tel" id="form-phone" class="w-full p-3 border-2 border-indigo-100 rounded-xl text-sm outline-none focus:border-indigo-500"></div>
                 </div>
-                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อ-นามสกุล</label><input type="text" id="form-name" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
+                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ชื่อ-นามสกุล</label><input type="text" id="form-name" class="w-full p-3 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
                 <div class="space-y-4 bg-slate-50 p-4 rounded-2xl">
-                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ตำแหน่ง (เลือก)</label><select id="form-position" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
-                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">สังกัด (เลือก)</label><select id="form-affiliation" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
-                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">หน่วยงาน/สถานศึกษา (เลือก)</label><select id="form-organization" class="w-full p-3 border rounded-xl text-sm bg-white"></select></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">ตำแหน่ง</label><select id="form-position" class="w-full p-3 border rounded-xl text-sm bg-white outline-none"></select></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">สังกัด</label><select id="form-affiliation" class="w-full p-3 border rounded-xl text-sm bg-white outline-none"></select></div>
+                    <div><label class="text-[11px] font-bold text-slate-400 block mb-1">หน่วยงาน/สถานศึกษา</label><select id="form-organization" class="w-full p-3 border rounded-xl text-sm bg-white outline-none"></select></div>
                 </div>
-                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์สถานศึกษา</label><input type="tel" id="form-org-phone" class="w-full p-3 border rounded-xl text-sm outline-none"></div>
+                <div><label class="text-[11px] font-bold text-slate-400 block mb-1">เบอร์สถานศึกษา</label><input type="tel" id="form-org-phone" class="w-full p-3 border rounded-xl text-sm outline-none focus:border-indigo-500"></div>
             </div>
             <div class="p-6 bg-slate-50 flex gap-2">
                 <button onclick="closeEditModal()" class="flex-1 py-4 bg-slate-200 rounded-2xl text-sm font-bold text-slate-600">ยกเลิก</button>
@@ -129,8 +132,8 @@
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[11px] px-6 py-3 rounded-full shadow-2xl z-[70] opacity-0 transition-all transform translate-y-4"></div>
 
     <script>
-        // ⚠️ แทนที่ URL ด้านล่างนี้ด้วย URL ของคุณจาก Apps Script
-        const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbx-y-HtfXPTt4GNEUZArvMuXJ7kZCv_3iZYZ9xqGwBnn1QoyK2L5KOcVUCcv8PoCX82/exec";
+        // ⚠️ ลิงก์ API ถาวร
+        const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxJ9L7PqubUpGuembTJD-tKg2Z0JEAZRcpcDYCtj2Qf0uHdfxepq1Uiq3FvWl9MHQan/exec";
         const SAFE_PASSCODE = "1234";
 
         let contacts = [];
@@ -179,7 +182,7 @@
         function logout() { sessionStorage.clear(); location.reload(); }
 
         async function syncWithGoogleSheets(silent = false) {
-            if (!silent) showToast("กำลังดึงข้อมูลล่าสุด...", "fa-sync fa-spin");
+            if (!silent) showToast("กำลังดึงข้อมูลจาก Cloud...", "fa-sync fa-spin");
             try {
                 const res = await fetch(PERMANENT_SHEETS_URL);
                 contacts = await res.json();
@@ -214,13 +217,29 @@
             fillModal('form-position', poss); fillModal('form-affiliation', affs); fillModal('form-organization', orgs);
         }
 
+        function formatPhone(phone) {
+            if (!phone) return "";
+            const p = String(phone).replace(/[^0-9]/g, '');
+            if (p.length === 10) return `${p.slice(0, 3)}-${p.slice(3, 6)}-${p.slice(6)}`;
+            if (p.length === 9) return `${p.slice(0, 2)}-${p.slice(2, 5)}-${p.slice(5)}`;
+            return phone;
+        }
+
+        function maskPhone(phone) {
+            if (!phone) return "-";
+            const p = String(phone).replace(/[^0-9]/g, '');
+            if (p.length >= 9) return `${p.slice(0, 3)}-xxx-${p.slice(p.length-4)}`;
+            return phone;
+        }
+
         function renderDirectory() {
             const search = document.getElementById('search-input').value.toLowerCase();
             const fAff = document.getElementById('filter-affiliation').value;
             const fOrg = document.getElementById('filter-organization').value;
             const fPos = document.getElementById('filter-position').value;
             const container = document.getElementById('directory-cards-container');
-            container.innerHTML = ""; let count = 0;
+            container.innerHTML = "";
+            let count = 0;
 
             contacts.forEach((item, index) => {
                 const nameMatch = item["ชื่อ-สกุล"].toLowerCase().includes(search) || (item["ชื่อเล่น"] && item["ชื่อเล่น"].toLowerCase().includes(search));
@@ -233,22 +252,41 @@
                     const phoneRaw = item["เบอร์โทรศัพท์"];
                     const id = item.ID_Contact;
                     const isMasked = isGlobalMasked && !unmaskedIds.has(id);
-                    const phoneDisplay = isMasked ? `${String(phoneRaw).slice(0,3)}-xxx-${String(phoneRaw).slice(7)}` : phoneRaw;
+                    const phoneDisplay = isMasked ? maskPhone(phoneRaw) : formatPhone(phoneRaw);
                     const eyeIcon = isMasked ? 'fa-eye' : 'fa-eye-slash';
+                    
+                    const orgPhoneRaw = item["เบอร์โทรสถานศึกษา"] || "";
+                    const orgPhoneDisplay = formatPhone(orgPhoneRaw);
 
                     container.innerHTML += `<div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 relative">
-                        <div class="text-[10px] font-bold text-indigo-500 uppercase">${item["ตำแหน่ง"]}</div>
-                        <h3 class="font-bold text-slate-900">${item["ชื่อ-สกุล"]} (${item["ชื่อเล่น"] || ''})</h3>
+                        <div class="text-[10px] font-bold text-indigo-500 uppercase tracking-wider">${item["ตำแหน่ง"]}</div>
+                        <h3 class="font-bold text-slate-900 text-base mt-0.5">${item["ชื่อ-สกุล"]} (${item["ชื่อเล่น"] || ''})</h3>
                         <p class="text-[10px] text-slate-400 mb-4">${item["หน่วยงาน/สถานศึกษา"]}</p>
-                        <div class="flex gap-2">
-                            <div class="flex-1 bg-indigo-50 rounded-xl p-2 flex items-center justify-between border border-indigo-100 overflow-hidden">
-                                <span class="text-xs font-bold font-mono text-slate-700">${phoneDisplay}</span>
-                                <button onclick="toggleIndividualMask('${id}')" class="text-slate-400 hover:text-indigo-600 ml-1"><i class="fa-solid ${eyeIcon}"></i></button>
+                        
+                        <div class="space-y-2">
+                            <!-- เบอร์โทรศัพท์มือถือ -->
+                            <div class="bg-indigo-50 rounded-2xl p-2.5 flex items-center justify-between border border-indigo-100 overflow-hidden">
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] font-bold text-indigo-400 uppercase">เบอร์มือถือ</span>
+                                    <span class="text-xs font-bold font-mono text-slate-700 leading-tight">${phoneDisplay}</span>
+                                </div>
+                                <div class="flex items-center gap-1.5">
+                                    <button onclick="toggleIndividualMask('${id}')" class="text-slate-400 hover:text-indigo-600 p-1"><i class="fa-solid ${eyeIcon}"></i></button>
+                                    <a href="tel:${phoneRaw}" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fa-solid fa-phone text-[10px]"></i></a>
+                                </div>
                             </div>
-                            <a href="tel:${phoneRaw}" class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md"><i class="fa-solid fa-phone"></i></a>
-                            ${item["เบอร์โทรสถานศึกษา"] ? `<a href="tel:${item["เบอร์โทรสถานศึกษา"]}" class="bg-slate-100 text-slate-500 w-10 h-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-school"></i></a>` : ''}
+
+                            <!-- เบอร์สถานศึกษา (เพิ่มตรงนี้) -->
+                            <div class="bg-slate-50 rounded-2xl p-2.5 flex items-center justify-between border border-slate-100 overflow-hidden">
+                                <div class="flex flex-col">
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase">เบอร์สถานศึกษา</span>
+                                    <span class="text-xs font-bold font-mono text-slate-700 leading-tight">${orgPhoneDisplay || 'ไม่มีข้อมูล'}</span>
+                                </div>
+                                ${orgPhoneRaw ? `<a href="tel:${orgPhoneRaw}" class="bg-slate-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-sm"><i class="fa-solid fa-phone text-[10px]"></i></a>` : ''}
+                            </div>
                         </div>
-                        ${isAdminMode ? `<button onclick="openEditModal(${index})" class="absolute top-4 right-4 text-indigo-600 bg-indigo-50 p-2 rounded-lg hover:bg-indigo-100"><i class="fa-solid fa-pen-to-square"></i></button>` : ''}
+
+                        ${isAdminMode ? `<button onclick="openEditModal(${index})" class="absolute top-4 right-4 text-indigo-600 bg-indigo-50 p-2 rounded-lg hover:bg-indigo-100 transition-colors"><i class="fa-solid fa-pen-to-square text-sm"></i></button>` : ''}
                     </div>`;
                 }
             });
@@ -287,7 +325,7 @@
 
         async function updateToCloud() {
             const btn = document.getElementById('save-btn');
-            btn.disabled = true; btn.innerHTML = "กำลังอัปเดต...";
+            btn.disabled = true; btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin mr-1'></i> กำลังอัปเดต...";
             const payload = {
                 ID_Contact: document.getElementById('form-id').value,
                 "ชื่อ-สกุล": document.getElementById('form-name').value,
@@ -300,10 +338,10 @@
             };
             try {
                 await fetch(PERMANENT_SHEETS_URL, { method: "POST", body: JSON.stringify(payload) });
-                showToast("อัปเดตสำเร็จ!", "fa-check");
+                showToast("อัปเดตลง Google Sheets สำเร็จ!", "fa-check");
                 closeEditModal();
                 setTimeout(() => syncWithGoogleSheets(true), 1500);
-            } catch (e) { showToast("เกิดข้อผิดพลาด", "fa-xmark"); } finally { btn.disabled = false; btn.innerHTML = "บันทึกการแก้ไข"; }
+            } catch (e) { showToast("เกิดข้อผิดพลาดในการเชื่อมต่อ", "fa-xmark"); } finally { btn.disabled = false; btn.innerHTML = "บันทึกการแก้ไข"; }
         }
 
         function showToast(msg, icon) {
