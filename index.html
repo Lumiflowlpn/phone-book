@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบทำเนียบเบอร์โทรศัพท์ สกร. ลำพูน</title>
+    
+    <!-- 📱 รองรับการแสดงผลแอปพลิเคชันเสมือนจริงบนมือถือ (Mobile Web App Meta) -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="indigo-700">
+    <meta name="apple-mobile-web-app-title" content="ทำเนียบ สกร.">
+    
+    <!-- 🎨 ฝังชุดโค้ดไอคอนสมุดทำเนียบทอง-ครามความละเอียดสูง (SVG Base64 Web Icon) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%234f46e5'/><path d='M192 128h192a32 32 0 0 1 32 32v192a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32zm-64 48h32v32h-32zm0 64h32v32h-32zm0 64h32v32h-32zm128-112h128v32H256zm0 64h128v32H256zm0 64h96v32H256z' fill='%23facc15'/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%234f46e5'/><path d='M192 128h192a32 32 0 0 1 32 32v192a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V160a32 32 0 0 1 32-32zm-64 48h32v32h-32zm0 64h32v32h-32zm0 64h32v32h-32zm128-112h128v32H256zm0 64h128v32H256zm0 64h96v32H256z' fill='%23facc15'/></svg>">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,15 +26,15 @@
 
     <!-- 📄 1. หน้าจอ PDPA (แสดงอันดับแรก) -->
     <div id="pdpa-screen" class="fixed inset-0 bg-slate-900 z-[70] flex items-center justify-center p-4">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-slate-100">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-lg border border-slate-100 transform transition-all duration-300">
             <div class="text-indigo-600 text-5xl mb-6 text-center"><i class="fa-solid fa-file-shield"></i></div>
-            <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">นโยบายความเป็นส่วนตัว</h2>
+            <h2 class="text-2xl font-bold text-slate-900 mb-4 text-center">นโยบายความเป็นส่วนตัว (PDPA)</h2>
             <div class="text-sm text-slate-600 space-y-4 mb-8 leading-relaxed max-h-60 overflow-y-auto pr-2 no-scrollbar">
-                <p><strong>ข้อตกลงการเข้าถึงข้อมูล:</strong></p>
-                <p>1. ข้อมูลนี้ใช้เพื่อการประสานงานภายในสังกัด สกร. จังหวัดลำพูน เท่านั้น</p>
-                <p>2. ห้ามมิให้นำข้อมูลเบอร์โทรศัพท์ไปเผยแพร่ต่อภายนอกโดยไม่ได้รับอนุญาต</p>
-                <p>3. ระบบมีการซ่อนเบอร์โทรศัพท์ไว้เพื่อความปลอดภัย (PDPA) ท่านสามารถกดเปิดดูได้เฉพาะเมื่อจำเป็น</p>
-                <p>4. การกด "ยอมรับ" หมายถึงท่านตกลงจะปฏิบัติตามกฎระเบียบรักษาความลับข้อมูลบุคลากร</p>
+                <p><strong>ข้อตกลงการเข้าถึงข้อมูลระบบทำเนียบ สกร. ลำพูน:</strong></p>
+                <p>1. ข้อมูลติดต่อนี้มีไว้สำหรับการติดต่อประสานงานราชการภายในหน่วยงานเท่านั้น</p>
+                <p>2. ห้ามมิให้นำข้อมูลเบอร์โทรศัพท์บุคลากรไปใช้ประโยชน์เชิงพาณิชย์ หรือส่งต่อภายนอกโดยมิชอบ</p>
+                <p>3. เพื่อรักษาระเบียบข้อมูลส่วนบุคคล ระบบจะทำการพรางตัวเลขบางส่วนเป็นความลับ โดยท่านสามารถเปิดเผยเฉพาะเมื่อจำเป็น</p>
+                <p>4. การกดตกลงเป็นการรับทราบนโยบายรักษาความมั่นคงปลอดภัยสารสนเทศของพนักงาน</p>
             </div>
             <button onclick="acceptPDPA()" class="w-full bg-indigo-600 text-white font-bold py-4 rounded-2xl shadow-lg hover:bg-indigo-700 transition-all text-lg">ยอมรับและดำเนินการต่อ</button>
         </div>
@@ -53,8 +63,10 @@
                     <h1 class="font-bold text-lg leading-tight">ทำเนียบเบอร์โทรศัพท์</h1>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <button onclick="toggleAdminMode()" id="admin-btn" class="bg-white/10 p-2 rounded-lg hover:bg-white/20 transition-all"><i class="fa-solid fa-user-gear"></i></button>
-                    <button onclick="logout()" class="bg-red-500 p-2 rounded-lg hover:bg-red-600 transition-all"><i class="fa-solid fa-power-off"></i></button>
+                    <!-- ปุ่มเปิดคู่มือการติดตั้งและการใช้งาน -->
+                    <button onclick="openGuideModal()" class="bg-white/10 p-2.5 rounded-lg hover:bg-white/20 transition-all" title="คู่มือใช้งานและติดตั้ง"><i class="fa-solid fa-circle-question text-lg"></i></button>
+                    <button onclick="toggleAdminMode()" id="admin-btn" class="bg-white/10 p-2.5 rounded-lg hover:bg-white/20 transition-all" title="โหมดผู้ดูแล"><i class="fa-solid fa-user-gear text-lg"></i></button>
+                    <button onclick="logout()" class="bg-red-500 p-2.5 rounded-lg hover:bg-red-600 transition-all" title="ออกระบบ"><i class="fa-solid fa-power-off text-lg"></i></button>
                 </div>
             </div>
         </header>
@@ -75,7 +87,7 @@
                 <div class="flex justify-between items-center">
                     <div>
                         <span class="text-sm font-bold text-indigo-900 block">โหมดแอดมิน</span>
-                        <p class="text-[10px] text-indigo-400 italic">* กดไอคอนปากกาบนการ์ดเพื่อแก้ไขข้อมูล</p>
+                        <p class="text-[10px] text-indigo-400 italic">* กดไอคอนปากกาบนการ์ดเพื่อแก้ไขข้อมูลรายบุคคล</p>
                     </div>
                     <button onclick="syncWithGoogleSheets()" class="text-xs bg-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:bg-indigo-700 transition-all">
                         <i class="fa-solid fa-arrows-rotate mr-1"></i> ดึงข้อมูลจากชีต
@@ -129,10 +141,102 @@
         </div>
     </div>
 
+    <!-- 📖 5. Interactive Guide & Installation Modal -->
+    <div id="guide-modal" class="fixed inset-0 bg-slate-900/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-6 border-b bg-slate-50 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-book-open text-indigo-600 text-xl"></i>
+                    <h3 class="font-bold text-slate-800 text-lg">ศูนย์ช่วยเหลือและคู่มือการติดตั้งระบบ</h3>
+                </div>
+                <button onclick="closeGuideModal()" class="text-slate-400 hover:text-slate-900"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <!-- เมนูแท็บ (Tabs) -->
+            <div class="flex border-b text-xs font-semibold bg-slate-50/50">
+                <button onclick="switchTab('tab-user')" id="btn-tab-user" class="flex-1 py-3 border-b-2 border-indigo-600 text-indigo-600">คู่มือผู้ใช้งาน</button>
+                <button onclick="switchTab('tab-admin')" id="btn-tab-admin" class="flex-1 py-3 border-b-2 border-transparent text-slate-500 hover:text-indigo-600">คู่มือแอดมิน</button>
+                <button onclick="switchTab('tab-setup')" id="btn-tab-setup" class="flex-1 py-3 border-b-2 border-transparent text-slate-500 hover:text-indigo-600">ขั้นตอนตั้งค่า API</button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 no-scrollbar flex-1 text-sm leading-relaxed text-slate-600">
+                
+                <!-- Tab 1: User Guide -->
+                <div id="tab-user" class="space-y-4">
+                    <h4 class="font-bold text-slate-900 text-base flex items-center"><i class="fa-solid fa-mobile-screen-button text-indigo-500 mr-2"></i> วิธีติดตั้งแอปไว้บนหน้าจอมือถือ (แบบพกพา)</h4>
+                    <div class="bg-slate-50 p-4 rounded-2xl space-y-3 text-xs">
+                        <p class="font-semibold text-slate-700"><i class="fa-brands fa-apple text-base mr-1"></i> สำหรับ iPhone (iOS / Safari):</p>
+                        <ol class="list-decimal list-inside space-y-1 pl-1">
+                            <li>เปิดลิงก์ทำเนียบของคุณในเบราว์เซอร์ <strong>Safari</strong></li>
+                            <li>กดปุ่ม <strong>แชร์ (Share)</strong> (ไอคอนสี่เหลี่ยมลูกศรชี้ขึ้นด้านล่างหน้าจอ)</li>
+                            <li>เลื่อนและกดที่ <strong>"เพิ่มไปยังหน้าจอโฮม" (Add to Home Screen)</strong></li>
+                        </ol>
+                        <p class="font-semibold text-slate-700 mt-2"><i class="fa-brands fa-android text-base mr-1"></i> สำหรับ Android (Chrome):</p>
+                        <ol class="list-decimal list-inside space-y-1 pl-1">
+                            <li>เปิดลิงก์ในเบราว์เซอร์ <strong>Google Chrome</strong></li>
+                            <li>กดปุ่ม <strong>ตัวเลือก (จุด 3 จุด)</strong> ที่อยู่ขวาบน</li>
+                            <li>กดที่ <strong>"ติดตั้งแอป" (Install App)</strong> หรือ <strong>"เพิ่มลงหน้าจอหลัก"</strong></li>
+                        </ol>
+                    </div>
+
+                    <h4 class="font-bold text-slate-900 text-base flex items-center mt-6"><i class="fa-solid fa-eye-slash text-indigo-500 mr-2"></i> ระบบรักษาสิทธิความเป็นส่วนตัว (PDPA)</h4>
+                    <ul class="list-disc list-inside space-y-2 pl-2 text-xs">
+                        <li><strong>การซ่อนเบอร์:</strong> เริ่มต้นระบบจะพรางตัวเลขตรงกลางเอาไว้เพื่อความปลอดภัย (เช่น 081-xxx-1234)</li>
+                        <li><strong>แสดงเบอร์รายคน:</strong> กดไอคอน <strong>"รูปดวงตา" <i class="fa-solid fa-eye text-indigo-500"></i></strong> ท้ายเบอร์เพื่อดูตัวเลขเต็ม</li>
+                        <li><strong>แสดงเบอร์ทั้งหมด:</strong> กดปุ่ม <strong>"แสดงเบอร์โทรศัพท์"</strong> ที่แถบสรุปผลเพื่อยกเลิกการพรางเบอร์ทุกคนพร้อมกัน</li>
+                        <li><strong>การโทรออก:</strong> คลิกปุ่ม <strong><i class="fa-solid fa-phone text-indigo-500"></i> โทรออก</strong> ระบบจะพาท่านไปยังโปรแกรมโทรศัพท์บนโทรศัพท์มือถืออัตโนมัติ</li>
+                    </ul>
+                </div>
+
+                <!-- Tab 2: Admin Guide -->
+                <div id="tab-admin" class="space-y-4 hidden">
+                    <h4 class="font-bold text-slate-900 text-base flex items-center"><i class="fa-solid fa-user-shield text-indigo-500 mr-2"></i> การเข้าใช้งานและเปลี่ยนข้อมูล</h4>
+                    <ul class="list-disc list-inside space-y-2 pl-2 text-xs">
+                        <li><strong>การเปิดระบบแอดมิน:</strong> กดปุ่มไอคอนรูปฟันเฟืองแอดมิน <i class="fa-solid fa-user-gear text-indigo-500"></i> ด้านบน เพื่อเปิดแผงควบคุมหลัก</li>
+                        <li><strong>การแก้ไขประวัติ:</strong> ในโหมดแอดมิน ทุกท่านจะเห็นไอคอน <strong>"รูปดินสอ" <i class="fa-solid fa-pen-to-square text-indigo-500"></i></strong> ด้านขวาบนของการ์ดแต่ละรายชื่อ</li>
+                        <li><strong>ดรอปดาวน์อัจฉริยะ:</strong> ในขั้นตอนการปรับปรุง ตำแหน่ง สังกัด และหน่วยงานจะเป็น Dropdown ให้คลิกเลื่อนเพื่อความสะดวกและป้องกันการพิมพ์คำเพี้ยน</li>
+                        <li><strong>การล้างค่าเครื่อง:</strong> หากต้องการซิงค์ประวัติใหม่ทั้งหมดจาก Google Sheets ให้คลิกที่ <strong>"ดึงข้อมูลจากชีต"</strong></li>
+                    </ul>
+                </div>
+
+                <!-- Tab 3: Setup Guide -->
+                <div id="tab-setup" class="space-y-4 hidden">
+                    <h4 class="font-bold text-slate-900 text-base flex items-center"><i class="fa-solid fa-table text-indigo-500 mr-2"></i> ขั้นตอนการเชื่อมโยงฐานข้อมูล Google Sheets</h4>
+                    <div class="space-y-3 text-xs leading-relaxed">
+                        <p class="font-semibold text-slate-800">1. การจัดรูปแบบแถวหัวตารางบนกูเกิลชีตของคุณ:</p>
+                        <p class="text-[11px] text-slate-500">แถวที่ 1 (Row 1) ต้องพิมพ์สะกดตามหัวข้อนี้ทุกช่อง:</p>
+                        <div class="bg-slate-100 p-2.5 rounded-xl font-mono text-[10px] text-slate-700 whitespace-nowrap overflow-x-auto">
+                            ID_Contact | ชื่อ-สกุล | ชื่อเล่น | เบอร์โทรศัพท์ | ตำแหน่ง | สังกัด | หน่วยงาน/สถานศึกษา | เบอร์โทรสถานศึกษา
+                        </div>
+                        
+                        <p class="font-semibold text-slate-800 mt-4">2. การสร้างและฝัง Apps Script ในกูเกิลชีต:</p>
+                        <ol class="list-decimal list-inside space-y-1 pl-1">
+                            <li>ที่หน้าชีต กด <strong>"ส่วนขยาย" (Extensions)</strong> > <strong>"Apps Script"</strong></li>
+                            <li>ลบสคริปต์เก่าทิ้ง แล้วนำโค้ด <code>Code.gs</code> ของคุณมาวางลงไปและบันทึก</li>
+                            <li>คลิกปุ่มสีน้ำเงินขวาบน <strong>"การทำให้ใช้งานได้" (Deploy)</strong> > <strong>"การทำให้ใช้งานได้ใหม่" (New deployment)</strong></li>
+                            <li>เลือกประเภทเป็น <strong>"เว็บแอป" (Web app)</strong></li>
+                            <li>ตั้งค่าเรียกใช้เป็น <strong>"ฉัน" (Me)</strong> และให้ผู้เข้าถึงเป็น <strong>"ทุกคน" (Anyone)</strong></li>
+                            <li>กด Deploy จากนั้นระบบจะแสดงสิทธิ์ ให้นำลิงก์ URL ที่ลงท้ายด้วย <code>/exec</code> มาเก็บไว้</li>
+                        </ol>
+
+                        <p class="font-semibold text-slate-800 mt-4">3. การฝังลิงก์ URL ในระบบ:</p>
+                        <p>นำลิงก์ <code>/exec</code> ลับของคุณมาแก้ไขแทนที่ตัวแปร <code>PERMANENT_SHEETS_URL</code> ในบรรทัดแรกของสคริปต์หน้าเว็บ <code>index.html</code> เพื่อให้ข้อมูลแสดงผลและบันทึกได้โดยอัตโนมัติ</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="p-6 bg-slate-50 border-t flex justify-end">
+                <button onclick="closeGuideModal()" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold transition-all shadow-md">เข้าใจและปิดหน้าต่าง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ส่วนพ่นข้อมูลแจ้งเตือน (Toast Alert) -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[11px] px-6 py-3 rounded-full shadow-2xl z-[70] opacity-0 transition-all transform translate-y-4"></div>
 
     <script>
-        // 🔗 อัปเดตลิงก์ API ล่าสุดของคุณที่ส่งมาอย่างถูกต้อง
+        // ⚠️ สังเกตการณ์ลิงก์ API ถาวรของ สกร. ลำพูน ที่คุณส่งมา
         const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbx-y-HtfXPTt4GNEUZArvMuXJ7kZCv_3iZYZ9xqGwBnn1QoyK2L5KOcVUCcv8PoCX82/exec";
         const SAFE_PASSCODE = "1234";
 
@@ -142,7 +246,7 @@
         let unmaskedIds = new Set();
 
         window.onload = function() {
-            // 🛡️ ป้องกันเบราว์เซอร์จำ Cache ลิงก์เก่า: ถ้าลิงก์ปัจจุบันไม่ตรงกับของเดิมในเครื่อง ให้ล้างแคชเก่าทิ้งทันที
+            // 🛡️ ระบบตรวจสอบ Cache-Buster: ป้องกันเครื่องจำ Cache ลิงก์กูเกิลชีตเก่าข้ามหน่วยงาน
             const lastUsedUrl = localStorage.getItem('last_used_sheets_url');
             if (lastUsedUrl !== PERMANENT_SHEETS_URL) {
                 localStorage.removeItem('secure_directory_contacts');
@@ -158,6 +262,7 @@
                 syncWithGoogleSheets(true);
             }
 
+            // ระบบจำสถานะการล็อกอินและ PDPA
             if (sessionStorage.getItem('pdpa_accepted') === 'true') {
                 document.getElementById('pdpa-screen').classList.add('hidden');
                 document.getElementById('auth-screen').classList.remove('hidden');
@@ -236,7 +341,6 @@
             return phone;
         }
 
-        // ปิดบังเบอร์บางส่วนตามข้อกำหนด PDPA
         function maskPhone(phone) {
             if (!phone) return "-";
             const p = String(phone).replace(/[^0-9]/g, '');
@@ -283,8 +387,8 @@
                                     <span class="text-xs font-bold font-mono text-slate-700 leading-tight">${phoneDisplay}</span>
                                 </div>
                                 <div class="flex items-center gap-1.5">
-                                    <button onclick="toggleIndividualMask('${id}')" class="text-slate-400 hover:text-indigo-600 p-1"><i class="fa-solid ${eyeIcon}"></i></button>
-                                    <a href="tel:${phoneRaw}" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md"><i class="fa-solid fa-phone text-[10px]"></i></a>
+                                    <button onclick="toggleIndividualMask('${id}')" class="text-slate-400 hover:text-indigo-600 p-1" title="สลับการซ่อน/แสดงเบอร์"><i class="fa-solid ${eyeIcon}"></i></button>
+                                    <a href="tel:${phoneRaw}" class="bg-indigo-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-md" title="โทรออกทันที"><i class="fa-solid fa-phone text-[10px]"></i></a>
                                 </div>
                             </div>
 
@@ -294,7 +398,7 @@
                                     <span class="text-[9px] font-bold text-slate-400 uppercase">เบอร์สถานศึกษา</span>
                                     <span class="text-xs font-bold font-mono text-slate-700 leading-tight">${orgPhoneDisplay || 'ไม่มีข้อมูล'}</span>
                                 </div>
-                                ${orgPhoneRaw ? `<a href="tel:${orgPhoneRaw}" class="bg-slate-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-sm"><i class="fa-solid fa-phone text-[10px]"></i></a>` : ''}
+                                ${orgPhoneRaw ? `<a href="tel:${orgPhoneRaw}" class="bg-slate-600 text-white w-8 h-8 rounded-lg flex items-center justify-center shadow-sm" title="โทรเบอร์สถานศึกษา"><i class="fa-solid fa-phone text-[10px]"></i></a>` : ''}
                             </div>
                         </div>
 
@@ -304,6 +408,30 @@
             });
             document.getElementById('record-count').innerText = count;
             document.getElementById('no-data-alert').classList.toggle('hidden', count > 0);
+        }
+
+        function openGuideModal() {
+            document.getElementById('guide-modal').classList.remove('hidden');
+        }
+
+        function closeGuideModal() {
+            document.getElementById('guide-modal').classList.add('hidden');
+        }
+
+        function switchTab(tabId) {
+            // ซ่อนทุกแท็บเนื้อหา
+            document.getElementById('tab-user').classList.add('hidden');
+            document.getElementById('tab-admin').classList.add('hidden');
+            document.getElementById('tab-setup').classList.add('hidden');
+
+            // รีเซ็ตขอบปุ่มเมนูแท็บทั้งหมด
+            document.getElementById('btn-tab-user').className = "flex-1 py-3 border-b-2 border-transparent text-slate-500 hover:text-indigo-600";
+            document.getElementById('btn-tab-admin').className = "flex-1 py-3 border-b-2 border-transparent text-slate-500 hover:text-indigo-600";
+            document.getElementById('btn-tab-setup').className = "flex-1 py-3 border-b-2 border-transparent text-slate-500 hover:text-indigo-600";
+
+            // เปิดแสดงแท็บและเน้นสีปุ่มแท็บที่เลือก
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).className = "flex-1 py-3 border-b-2 border-indigo-600 text-indigo-600";
         }
 
         function toggleIndividualMask(id) {
@@ -349,7 +477,6 @@
                 "เบอร์โทรสถานศึกษา": document.getElementById('form-org-phone').value
             };
             try {
-                // แก้ CORS Block และหลีกเลี่ยง Preflight ด้วยการตั้งค่า Content-Type เป็น text/plain
                 await fetch(PERMANENT_SHEETS_URL, { 
                     method: "POST", 
                     mode: "no-cors",
@@ -362,7 +489,6 @@
                 showToast("อัปเดตลง Google Sheets สำเร็จ!", "fa-check");
                 closeEditModal();
                 
-                // ตั้งหน่วงเวลาเพื่อให้ชีตฝั่ง Google บันทึกผลก่อนดึงข้อมูลมาอัปเดตหน้าจอเว็บ
                 setTimeout(() => syncWithGoogleSheets(true), 2000);
             } catch (e) { 
                 console.error(e);
