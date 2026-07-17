@@ -132,8 +132,8 @@
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[11px] px-6 py-3 rounded-full shadow-2xl z-[70] opacity-0 transition-all transform translate-y-4"></div>
 
     <script>
-        // ⚠️ ลิงก์ API ถาวรของคุณ
-        const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxJ9L7PqubUpGuembTJD-tKg2Z0JEAZRcpcDYCtj2Qf0uHdfxepq1Uiq3FvWl9MHQan/exec";
+        // 🔗 อัปเดตลิงก์ API ล่าสุดของคุณที่ส่งมาอย่างถูกต้อง
+        const PERMANENT_SHEETS_URL = "https://script.google.com/macros/s/AKfycbx-y-HtfXPTt4GNEUZArvMuXJ7kZCv_3iZYZ9xqGwBnn1QoyK2L5KOcVUCcv8PoCX82/exec";
         const SAFE_PASSCODE = "1234";
 
         let contacts = [];
@@ -142,6 +142,13 @@
         let unmaskedIds = new Set();
 
         window.onload = function() {
+            // 🛡️ ป้องกันเบราว์เซอร์จำ Cache ลิงก์เก่า: ถ้าลิงก์ปัจจุบันไม่ตรงกับของเดิมในเครื่อง ให้ล้างแคชเก่าทิ้งทันที
+            const lastUsedUrl = localStorage.getItem('last_used_sheets_url');
+            if (lastUsedUrl !== PERMANENT_SHEETS_URL) {
+                localStorage.removeItem('secure_directory_contacts');
+                localStorage.setItem('last_used_sheets_url', PERMANENT_SHEETS_URL);
+            }
+
             const saved = localStorage.getItem('secure_directory_contacts');
             if (saved) {
                 contacts = JSON.parse(saved);
@@ -150,6 +157,7 @@
             } else {
                 syncWithGoogleSheets(true);
             }
+
             if (sessionStorage.getItem('pdpa_accepted') === 'true') {
                 document.getElementById('pdpa-screen').classList.add('hidden');
                 document.getElementById('auth-screen').classList.remove('hidden');
@@ -190,7 +198,10 @@
                 populateFilters();
                 renderDirectory();
                 if (!silent) showToast("อัปเดตข้อมูลสำเร็จ!", "fa-check");
-            } catch (e) { if (!silent) showToast("การเชื่อมต่อล้มเหลว", "fa-xmark"); }
+            } catch (e) { 
+                console.error(e);
+                if (!silent) showToast("การเชื่อมต่อล้มเหลว", "fa-xmark"); 
+            }
         }
 
         function populateFilters() {
@@ -225,6 +236,7 @@
             return phone;
         }
 
+        // ปิดบังเบอร์บางส่วนตามข้อกำหนด PDPA
         function maskPhone(phone) {
             if (!phone) return "-";
             const p = String(phone).replace(/[^0-9]/g, '');
@@ -337,7 +349,7 @@
                 "เบอร์โทรสถานศึกษา": document.getElementById('form-org-phone').value
             };
             try {
-                // 🛠️ แก้ไข CORS Block โดยใช้ mode: "no-cors" และส่งแบบ text/plain เพื่อป้องกันการ Preflight (OPTIONS Request)
+                // แก้ CORS Block และหลีกเลี่ยง Preflight ด้วยการตั้งค่า Content-Type เป็น text/plain
                 await fetch(PERMANENT_SHEETS_URL, { 
                     method: "POST", 
                     mode: "no-cors",
@@ -350,8 +362,8 @@
                 showToast("อัปเดตลง Google Sheets สำเร็จ!", "fa-check");
                 closeEditModal();
                 
-                // ตั้งเวลาดึงข้อมูลใหม่หลังอัปเดต 1.5 วินาทีเพื่อให้ Sheets บันทึกเสร็จก่อน
-                setTimeout(() => syncWithGoogleSheets(true), 1500);
+                // ตั้งหน่วงเวลาเพื่อให้ชีตฝั่ง Google บันทึกผลก่อนดึงข้อมูลมาอัปเดตหน้าจอเว็บ
+                setTimeout(() => syncWithGoogleSheets(true), 2000);
             } catch (e) { 
                 console.error(e);
                 showToast("เกิดข้อผิดพลาดในการเชื่อมต่อ", "fa-xmark"); 
